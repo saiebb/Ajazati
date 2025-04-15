@@ -69,7 +69,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   ]
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" dir={isRTL ? "rtl" : "ltr"}>
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background px-4 md:hidden">
         <Link href="/" className="flex items-center gap-2">
@@ -109,7 +109,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                             pathname === route.href ? "bg-primary text-primary-foreground" : "hover:bg-muted"
                           }`}
                         >
-                          {route.icon}
+                          <span className={isRTL ? "rtl-mirror" : ""}>{route.icon}</span>
                           {route.label}
                         </Link>
                       </li>
@@ -118,11 +118,11 @@ export function MainLayout({ children }: MainLayoutProps) {
                 </nav>
                 <div className="border-t pt-4">
                   <div className="flex items-center gap-3 rounded-md px-3 py-2">
-                    <User className="h-5 w-5" />
+                    <User className={isRTL ? "rtl-mirror" : ""} />
                     <span className="text-sm font-medium">John Doe</span>
                   </div>
                   <Button variant="ghost" className="w-full justify-start gap-3 mt-2">
-                    <LogOut className="h-5 w-5" />
+                    <LogOut className={isRTL ? "rtl-mirror" : ""} />
                     <span>{t("auth.signOut", "Log out")}</span>
                   </Button>
                 </div>
@@ -134,7 +134,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       {/* Desktop Layout */}
       <div className="flex flex-1">
-        <aside className="hidden w-64 flex-col border-r bg-background md:flex">
+        <aside className={`hidden w-64 flex-col border-${isRTL ? 'l' : 'r'} bg-background md:flex`}>
           <div className="flex h-16 items-center border-b px-6">
             <Link href="/" className="flex items-center gap-2">
               <span className="font-bold text-xl text-primary">{t("app.name", "Jazati")}</span>
@@ -150,16 +150,16 @@ export function MainLayout({ children }: MainLayoutProps) {
                       pathname === route.href ? "bg-primary text-primary-foreground" : "hover:bg-muted"
                     }`}
                   >
-                    {route.icon}
+                    <span className={isRTL ? "rtl-mirror" : ""}>{route.icon}</span>
                     {route.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-          <div className="border-t p-4">
+          <div className={`border-t p-4`}>
             <div className="flex items-center gap-3 rounded-md px-3 py-2">
-              <User className="h-5 w-5" />
+              <User className={isRTL ? "rtl-mirror" : ""} />
               <span className="text-sm font-medium">John Doe</span>
             </div>
             <div className="flex items-center justify-between mt-4 px-3">
@@ -169,7 +169,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <ThemeToggle />
               </div>
               <Button variant="ghost" size="icon">
-                <LogOut className="h-5 w-5" />
+                <LogOut className={isRTL ? "rtl-mirror" : ""} />
                 <span className="sr-only">{t("auth.signOut", "Log out")}</span>
               </Button>
             </div>
@@ -185,7 +185,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                className="fixed bottom-6 right-6 z-50"
+                className={`fixed bottom-6 ${isRTL ? 'left-6' : 'right-6'} z-50`}
               >
                 <Button
                   size="icon"
@@ -212,7 +212,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 pathname === route.href ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              {route.icon}
+              <span className={isRTL ? "rtl-mirror" : ""}>{route.icon}</span>
               <span className="text-xs mt-1">{route.label}</span>
             </Link>
           ))}

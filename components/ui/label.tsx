@@ -2,25 +2,28 @@
 
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
-
+import { useLanguage } from "@/lib/i18n/client"
 import { cn } from "@/lib/utils"
-
-const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-)
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
-    VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root
-    ref={ref}
-    className={cn(labelVariants(), className)}
-    {...props}
-  />
-))
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, dir, ...props }, ref) => {
+  const { isRTL } = useLanguage()
+  
+  return (
+    <LabelPrimitive.Root
+      ref={ref}
+      dir={dir || (isRTL ? "rtl" : "ltr")}
+      className={cn(
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        "[dir='rtl']:text-right [dir='rtl']:self-start",
+        className
+      )}
+      {...props}
+    />
+  )
+})
 Label.displayName = LabelPrimitive.Root.displayName
 
 export { Label }

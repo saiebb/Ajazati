@@ -11,7 +11,7 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form"
-
+import { useLanguage } from "@/lib/i18n/client"
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
@@ -77,10 +77,19 @@ const FormItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const id = React.useId()
+  const { isRTL } = useLanguage()
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div 
+        ref={ref} 
+        className={cn(
+          "space-y-2",
+          "[dir='rtl']:text-right",
+          className
+        )} 
+        {...props}
+      />
     </FormItemContext.Provider>
   )
 })
@@ -91,11 +100,16 @@ const FormLabel = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField()
+  const { isRTL } = useLanguage()
 
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn(
+        error && "text-destructive",
+        "[dir='rtl']:text-right [dir='rtl']:w-full",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />
@@ -108,6 +122,7 @@ const FormControl = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  const { isRTL } = useLanguage()
 
   return (
     <Slot
@@ -119,6 +134,7 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
+      dir={isRTL ? "rtl" : "ltr"}
       {...props}
     />
   )
@@ -130,12 +146,17 @@ const FormDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
+  const { isRTL } = useLanguage()
 
   return (
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn(
+        "text-sm text-muted-foreground",
+        "[dir='rtl']:text-right",
+        className
+      )}
       {...props}
     />
   )
@@ -147,6 +168,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
+  const { isRTL } = useLanguage()
   const body = error ? String(error?.message) : children
 
   if (!body) {
@@ -157,7 +179,11 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn(
+        "text-sm font-medium text-destructive",
+        "[dir='rtl']:text-right",
+        className
+      )}
       {...props}
     >
       {body}

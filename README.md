@@ -1,6 +1,6 @@
 # Ajazati
 
-Ajazati (جازاتي) is a modern, bilingual (English/Arabic) vacation management web application built with Next.js, React, and Tailwind CSS. It allows users to efficiently manage, track, and analyze their vacation days with a beautiful, responsive, and RTL/LTR-aware interface.
+Ajazati (أجازاتى) is a modern, bilingual (English/Arabic) vacation management web application built with Next.js, React, and Tailwind CSS. It allows users to efficiently manage, track, and analyze their vacation days with a beautiful, responsive, and RTL/LTR-aware interface.
 
 ## Features
 

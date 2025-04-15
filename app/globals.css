@@ -76,8 +76,36 @@
 }
 
 /* RTL specific adjustments */
+[dir="rtl"] {
+  /* Base text direction */
+  text-align: right;
+}
+
 [dir="rtl"] .rtl-mirror {
   transform: scaleX(-1);
+}
+
+/* RTL Flexbox order adjustments */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+/* RTL margin adjustments */
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
 }
 
 /* Bidirectional text support */
@@ -85,21 +113,29 @@
   unicode-bidi: plaintext;
 }
 
-/* Fix for RTL input fields */
+.bidi-override {
+  unicode-bidi: bidi-override;
+}
+
+/* RTL form elements */
 [dir="rtl"] input[type="text"],
 [dir="rtl"] input[type="email"],
 [dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="search"],
+[dir="rtl"] input[type="tel"],
+[dir="rtl"] input[type="url"],
 [dir="rtl"] textarea {
   text-align: right;
 }
 
-/* Fix for RTL dropdown menus */
-[dir="rtl"] .dropdown-content {
+/* RTL dropdown and popover positioning */
+[dir="rtl"] .dropdown-content,
+[dir="rtl"] .popover-content {
   left: auto;
   right: 0;
 }
 
-/* Fix for RTL icons in buttons */
+/* RTL button icon positioning */
 [dir="rtl"] .button-icon-start {
   margin-right: 0;
   margin-left: 0.5rem;
@@ -108,6 +144,20 @@
 [dir="rtl"] .button-icon-end {
   margin-left: 0;
   margin-right: 0.5rem;
+}
+
+/* RTL scroll behavior */
+[dir="rtl"] .overflow-auto,
+[dir="rtl"] .overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* RTL transitions */
+[dir="rtl"] * {
+  transition-property: transform, margin, padding;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
 }
 
 /* Responsive adjustments */
@@ -167,5 +217,36 @@
 
 /* Language transition */
 html {
-  transition: direction 0.2s ease;
+  transition: all 0.2s ease-in-out;
+}
+
+/* RTL-specific animations */
+@keyframes slide-in-rtl {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-rtl {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+[dir="rtl"] .animate-slide-in {
+  animation: slide-in-rtl 0.3s ease-out;
+}
+
+[dir="rtl"] .animate-slide-out {
+  animation: slide-out-rtl 0.3s ease-in;
 }
