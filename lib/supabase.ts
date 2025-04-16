@@ -3,9 +3,9 @@ import { getCookie, setCookie, deleteCookie } from 'cookies-next'
 import { User, Session } from '@/types'
 
 // تكوين Supabase
-const supabaseUrl = 'https://hqcjfmzbukchvbagviwt.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2pmbXpidWtjaHZiYWd2aXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2OTgzODAsImV4cCI6MjA2MDI3NDM4MH0.WEYqNOJdO10mbXrtZxwJdomBiyksIkceHLBn-l6RPcg'
-const supabaseServiceRoleKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2pmbXpidWtjaHZiYWd2aXd0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDY5ODM4MCwiZXhwIjoyMDYwMjc0MzgwfQ.ixSsmtPYhha3zYwa-wRaOwsvHbTSjBh64sRSpXB_eyk'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hqcjfmzbukchvbagviwt.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2pmbXpidWtjaHZiYWd2aXd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2OTgzODAsImV4cCI6MjA2MDI3NDM4MH0.WEYqNOJdO10mbXrtZxwJdomBiyksIkceHLBn-l6RPcg'
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2pmbXpidWtjaHZiYWd2aXd0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDY5ODM4MCwiZXhwIjoyMDYwMjc0MzgwfQ.ixSsmtPYhha3zYwa-wRaOwsvHbTSjBh64sRSpXB_eyk'
 
 // إنشاء عميل Supabase للمتصفح
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

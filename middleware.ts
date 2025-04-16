@@ -5,6 +5,9 @@ import { createClient } from "@supabase/supabase-js"
 // Add paths that don't require authentication
 const publicPaths = ["/auth/sign-in", "/auth/sign-up", "/onboarding"]
 
+// Add paths that should be accessible for static assets and API routes
+const bypassPaths = ["/api/", "/_next", "/favicon.ico", "/images/", "/fonts/"]
+
 // Add paths that require admin role
 const adminPaths = ["/settings/users", "/settings/roles", "/settings/vacation-types"]
 
@@ -13,6 +16,11 @@ export async function middleware(request: NextRequest) {
 
   // Allow public paths without authentication
   if (publicPaths.includes(path)) {
+    return NextResponse.next()
+  }
+  
+  // Bypass middleware for static assets and API routes
+  if (bypassPaths.some(bp => path.startsWith(bp))) {
     return NextResponse.next()
   }
 
