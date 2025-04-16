@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
+import { getCookie, setCookie, deleteCookie } from 'cookies-next'
 import { User, Session } from '@/types'
 
 // تكوين Supabase
@@ -32,14 +32,13 @@ export const getServerSupabase = () => {
   })
 }
 
-export const getSession = async () => {
+export const getSession = () => {
   try {
-    const cookieStore = await cookies()
-    const sessionCookie = cookieStore.get("session")
+    const sessionCookie = getCookie("session")
 
-    if (!sessionCookie?.value) return null
+    if (!sessionCookie) return null
 
-    const session: Session = JSON.parse(sessionCookie.value)
+    const session: Session = JSON.parse(sessionCookie.toString())
     return session
   } catch {
     return null
