@@ -1,55 +1,59 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getUserNotifications, markNotificationAsRead } from "@/lib/actions"
 import type { Notification } from "@/types"
-import { formatDistanceToNow } from "date-fns"
 
-export function NotificationsDropdown() {
+interface NotificationsDropdownProps {
+  userId: string
+}
+
+export function NotificationsDropdown({ userId }: NotificationsDropdownProps) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loading, setLoading] = useState(true)
-  const [unreadCount, setUnreadCount] = useState(0)
-
-  // For demo purposes, we'll use a hardcoded user ID
-  const userId = "123e4567-e89b-12d3-a456-426614174000"
+  const router = useRouter()
 
   useEffect(() => {
-    async function fetchNotifications() {
-      try {
-        const data = await getUserNotifications(userId)
-        setNotifications(data)
-        setUnreadCount(data.filter((n) => !n.read).length)
-      } catch (error) {
-        console.error("Error fetching notifications:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    loadNotifications()
+  }, [])
 
-    fetchNotifications()
-  }, [userId])
-
-  async function handleMarkAsRead(id: string) {
+  async function loadNotifications() {
     try {
-      await markNotificationAsRead(id)
-
-      // Update local state
-      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
-      setUnreadCount((prev) => Math.max(0, prev - 1))
+      const data = await getUserNotifications(userId)
+      setNotifications(data)
     } catch (error) {
-      console.error("Error marking notification as read:", error)
+      console.error("Error loading notifications:", error)
+    } finally {
+      setLoading(false)
     }
   }
+
+  async function handleNotificationClick(notification: Notification) {
+    try {
+      await markNotificationAsRead(notification.id)
+      
+      // If the notification is related to a vacation, navigate to it
+      if (notification.vacation_id) {
+        router.push(`/vacation/${notification.vacation_id}`)
+      }
+      
+      // Refresh notifications
+      loadNotifications()
+    } catch (error) {
+      console.error("Error handling notification click:", error)
+    }
+  }
+
+  const unreadCount = notifications.filter(n => !n.read).length
 
   return (
     <DropdownMenu>
@@ -57,30 +61,25 @@ export function NotificationsDropdown() {
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-accent [dir='rtl']:left-0 [dir='rtl']:right-auto" />
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+              {unreadCount}
+            </span>
           )}
-          <span className="sr-only">Notifications</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
         {loading ? (
-          <div className="p-4 text-center text-sm text-muted-foreground">Loading notifications...</div>
+          <DropdownMenuItem disabled>Loading notifications...</DropdownMenuItem>
         ) : notifications.length === 0 ? (
-          <div className="p-4 text-center text-sm text-muted-foreground">No notifications yet</div>
+          <DropdownMenuItem disabled>No notifications</DropdownMenuItem>
         ) : (
           notifications.map((notification) => (
             <DropdownMenuItem
               key={notification.id}
-              className={`flex flex-col items-start p-3 [dir='rtl']:text-right ${!notification.read ? "bg-muted/50" : ""}`}
-              onClick={() => !notification.read && handleMarkAsRead(notification.id)}
+              onClick={() => handleNotificationClick(notification)}
+              className={!notification.read ? "font-medium" : ""}
             >
-              <div className="text-sm font-medium">{notification.message}</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
-              </div>
+              {notification.message}
             </DropdownMenuItem>
           ))
         )}

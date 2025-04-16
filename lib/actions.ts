@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { getServerSupabase } from "./supabase"
-import type { Vacation, VacationSummary, VacationType } from "@/types"
+import type { Vacation, VacationSummary, VacationType, UserPreferences } from "@/types"
 import { calculateVacationDays } from "./utils"
 
 // Get all vacation types
@@ -126,10 +126,10 @@ export async function getVacationSummary(userId: string): Promise<VacationSummar
   }
 
   return {
-    used: usedDays,
-    pending: pendingDays,
-    remaining: totalDays - usedDays,
-    total: totalDays,
+    total_days: totalDays,
+    used_days: usedDays,
+    pending_days: pendingDays,
+    remaining_days: totalDays - usedDays,
   }
 }
 
@@ -271,5 +271,29 @@ export async function markNotificationAsRead(notificationId: string) {
 
   revalidatePath("/")
 
+  return { success: true }
+}
+
+// Update user preferences
+export async function updateUserPreferences(preferences: UserPreferences): Promise<{ success: boolean; message?: string }> {
+  const supabase = getServerSupabase()
+
+  const { error } = await supabase
+    .from("user_preferences")
+    .update({
+      ...preferences,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", preferences.user_id)
+
+  if (error) {
+    console.error("Error updating preferences:", error)
+    return {
+      success: false,
+      message: "Failed to update preferences"
+    }
+  }
+
+  revalidatePath("/settings")
   return { success: true }
 }
