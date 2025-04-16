@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter, IBM_Plex_Sans_Arabic } from "next/font/google"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/lib/i18n/client"
@@ -30,7 +31,10 @@ export default async function RootLayout({
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={fontClass}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <LanguageProvider initialLocale={locale}>{children}</LanguageProvider>
+          <LanguageProvider initialLocale={locale}>
+            {children}
+            <SpeedInsights />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
