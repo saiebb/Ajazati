@@ -455,3 +455,6 @@ export default function SettingsPage() {
     </MainLayout>
   )
 }
+
+// Add this export at the bottom of your settings page file
+export const dynamic = 'force-dynamic';

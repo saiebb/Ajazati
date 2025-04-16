@@ -154,15 +154,18 @@ export default function CalendarPage() {
                   },
                 }}
                 components={{
-                  DayContent: ({ date, ...props }) => {
+                  DayContent: ({ date, displayMonth, ...props }) => {
+                    // Extract React-specific props that shouldn't be passed to DOM elements
+                    // Use type assertion to handle the props that TypeScript doesn't recognize
+                    const { className, style, activeModifiers, ...domProps } = props as React.HTMLAttributes<HTMLDivElement> & { activeModifiers: any };
                     const matchingVacations = vacationDates.filter((v) => isSameDay(v.date, date))
 
                     if (matchingVacations.length === 0) {
-                      return <div {...props}>{date.getDate()}</div>
+                      return <div {...domProps}>{date.getDate()}</div>
                     }
 
                     return (
-                      <div {...props} className="relative w-full h-full flex items-center justify-center">
+                      <div {...domProps} className="relative w-full h-full flex items-center justify-center">
                         {date.getDate()}
                         <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
                           {matchingVacations.map((vacation, i) => (
