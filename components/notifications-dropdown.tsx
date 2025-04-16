@@ -56,7 +56,9 @@ export function NotificationsDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
-          {unreadCount > 0 && <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-accent" />}
+          {unreadCount > 0 && (
+            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-accent [dir='rtl']:left-0 [dir='rtl']:right-auto" />
+          )}
           <span className="sr-only">Notifications</span>
         </Button>
       </DropdownMenuTrigger>
@@ -72,7 +74,7 @@ export function NotificationsDropdown() {
           notifications.map((notification) => (
             <DropdownMenuItem
               key={notification.id}
-              className={`flex flex-col items-start p-3 ${!notification.read ? "bg-muted/50" : ""}`}
+              className={`flex flex-col items-start p-3 [dir='rtl']:text-right ${!notification.read ? "bg-muted/50" : ""}`}
               onClick={() => !notification.read && handleMarkAsRead(notification.id)}
             >
               <div className="text-sm font-medium">{notification.message}</div>
