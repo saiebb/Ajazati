@@ -34,7 +34,13 @@ export async function completeOnboarding(formData: FormData) {
       })
       .eq("id", user.id)
 
-    if (profileError) throw profileError
+    if (profileError) {
+      console.error("Profile error:", profileError)
+      return {
+        success: false,
+        message: profileError.message || "فشل في تحديث الملف الشخصي"
+      }
+    }
 
     // Update user preferences
     const { error: preferencesError } = await supabase

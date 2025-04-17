@@ -7,17 +7,8 @@ CREATE TYPE vacation_status AS ENUM ('pending', 'approved', 'rejected');
 CREATE TYPE theme_type AS ENUM ('light', 'dark', 'system');
 CREATE TYPE language_type AS ENUM ('en', 'ar');
 
--- Create users table
-CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email TEXT UNIQUE NOT NULL,
-    name TEXT,
-    role user_role DEFAULT 'user',
-    department TEXT,
-    total_vacation_days INTEGER DEFAULT 21,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Users table is defined in migration file 20250416000000_auth_and_roles.sql
+-- Removed to avoid conflicts
 
 -- Create vacation_types table
 CREATE TABLE IF NOT EXISTS vacation_types (

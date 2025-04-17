@@ -62,6 +62,13 @@ export async function signUp(formData: FormData) {
 
     if (profileError) {
       console.error("Profile error:", profileError)
+      // تحقق مما إذا كانت المشكلة متعلقة بعمود 'department'
+      if (profileError.message && profileError.message.includes("department")) {
+        return {
+          success: false,
+          message: "حدث خطأ في حقل القسم. يرجى التحقق من وجود عمود 'department' في قاعدة البيانات.",
+        }
+      }
       return {
         success: false,
         message: profileError.message || "حدث خطأ أثناء إنشاء الملف الشخصي",
