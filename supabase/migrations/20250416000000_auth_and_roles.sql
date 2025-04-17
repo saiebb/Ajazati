@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS public.user_preferences (
     language TEXT DEFAULT 'en',
     notifications_enabled BOOLEAN DEFAULT TRUE,
     calendar_sync_enabled BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW'),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
 
@@ -130,6 +130,9 @@ begin
   insert into public.user_preferences (user_id)
   values (new.id);
 
+  -- Refresh schema cache
+  NOTIFY pgrst, 'reload schema';
+  
   return new;
 end;
 $$;

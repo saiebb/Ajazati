@@ -35,11 +35,24 @@ export async function signUp(formData: FormData) {
       password: validatedData.password,
     })
 
-    if (authError) throw authError
+    if (authError) {
+      console.error("Auth error:", authError)
+      return {
+        success: false,
+        message: authError.message || "حدث خطأ أثناء إنشاء الحساب",
+      }
+    }
+
+    if (!authData.user?.id) {
+      return {
+        success: false,
+        message: "لم يتم إنشاء المستخدم بشكل صحيح",
+      }
+    }
 
     // Create the user profile in the users table
     const { error: profileError } = await supabase.from("users").insert({
-      id: authData.user?.id,
+      id: authData.user.id,
       email: validatedData.email,
       name: validatedData.name,
       department: validatedData.department,
@@ -47,7 +60,13 @@ export async function signUp(formData: FormData) {
       total_vacation_days: 21, // Default vacation days
     })
 
-    if (profileError) throw profileError
+    if (profileError) {
+      console.error("Profile error:", profileError)
+      return {
+        success: false,
+        message: profileError.message || "حدث خطأ أثناء إنشاء الملف الشخصي",
+      }
+    }
 
     return { success: true }
   } catch (error) {
